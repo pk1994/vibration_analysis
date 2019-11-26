@@ -1,0 +1,40 @@
+#myChart {
+  height: 20%;
+  width: 20%;
+  float: right;
+  right: 3%;
+}
+
+body {
+  overflow: hidden;
+}
+
+.company-logo {
+  width: 25%;
+}
+.heading {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.header-logo {
+  width: 55%;
+  float: left;
+}
+.audio {
+  border: black;
+}
+.col-lg-12 {
+  display: inline;
+}
+.right-side {
+  border-left: 2px;
+  min-height: 500px;
+  border-bottom: 1px;
+}
+.idimg {
+  min-height: 500px;
+  min-width: 500px;
+}

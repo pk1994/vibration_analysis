@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="HandheldFriendly" content="true" />
+    <title>Vibration Analysis</title>
+
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script
+      src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+      type="text/javascript"
+    ></script>
+    <link rel="stylesheet" type="text/css" href="loading-bar.css" />
+    <script type="text/javascript" src="loading-bar.js"></script>
+    <link rel="stylesheet" type="text/css" href="app.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <!-- Nav bar -->
+    <div class="row" style="border-bottom: 1px solid #ccc">
+      <div class="container">
+        <div class="header-logo">
+          <a href="index.html">
+            <img class="company-logo" src="affine-logo.svg" />
+          </a>
+          <span class="heading">
+            Vibration Analysis using Artificial Intelligence
+          </span>
+        </div>
+        <div class="navbar">
+          <ul class="navigation">
+            <li>
+              <a class="btn btn-sm btn-primary " href="vibration.html"
+                >Analyze Vibration</a
+              >
+            </li>
+            <li>
+              <a class="btn btn-sm btn-default" href="search.html"
+                >Detect Corrosion</a
+              >
+            </li>
+            <li>
+              <a class="btn btn-sm btn-default" href="search_dmg.html"
+                >Detect Damage</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab">
+        <button class="tablinks active" onclick="openCity(event, 'London')">
+          Single Acoustic Profile
+        </button>
+        <button class="tablinks" onclick="openCity(event, 'Paris')">
+          Multi Acoustic Profile
+        </button>
+      </div>
+
+      <div id="London" class="tabcontent" style="display: block;">
+        <div class="row">
+          <div class="col-md-12 top" style="height:45vh">
+            <figure>
+              <audio
+                title="Normal Sound"
+                id="myaudio"
+                controls
+                class="col-md-3 audio"
+                src="normal.wav"
+              ></audio>
+              <label
+                style=" padding-top: 60px;
+              padding-left: 20px;"
+                >Normal Sound</label
+              >
+            </figure>
+            <div id="loader"></div>
+            <!-- spectogram image -->
+            <div class="col-md-12" style="margin-top: 30px">
+              <div class="col-md-2" style="visibility: hidden"></div>
+              <div id="imgg" class="col-md-4 idimg "></div>
+
+              <!-- amplitude image  -->
+              <div class="col-md-3 ">
+                <canvas id="imgg1" width="261" height="200"></canvas>
+              </div>
+              <!-- <div id="imgg1" class="col-md-4 idimg1"></div> -->
+
+              <!-- chart -->
+              <!-- <span
+                class="chart-container col-md-3"
+                style="position: absolute; width:80vw;top:5%;left:40%"
+              >
+                <canvas class="chart" id="myChart" style="left:60%;"></canvas>
+              </span> -->
+              <div class="col-md-2" style="visibility: hidden"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------------pitting -->
+        <div class="row">
+          <div style="height:40vh;">
+            <figure>
+              <audio
+                title="Pitting Sound"
+                id="myaudiopitting"
+                controls
+                class="col-md-3 audiopitting"
+                src=" pitting.wav"
+              ></audio>
+              <label
+                style=" padding-top: 60px;
+              padding-left: 20px;"
+                >Pitting Sound</label
+              >
+            </figure>
+
+            <div id="loader1"></div>
+            <!-- spectogram image -->
+            <div class="col-md-12" style="margin-top:50px">
+              <div id="imggpitting" class="col-md-3 idimgpitting"></div>
+              <div id="imggpittingdiff" class="col-md-3 idimgpitting"></div>
+
+              <!-- amplitude image  -->
+              <div class="col-md-3 ">
+                <canvas id="imgg1pitting" width="261" height="200"></canvas>
+              </div>
+              <!-- <div id="imgg1pitting" class="col-md-3 idimg1pitting"></div> -->
+              <div
+                id="imgg1pittingdiff"
+                class="col-md-3 idimg1pittingdiff"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <!-- ------------------------------------------------------ tooth fracture  -->
+        <div class="row">
+          <div style="height: 40vh">
+            <figure>
+              <audio
+                title="Tooth Fracture Sound"
+                id="myaudiotooth"
+                controls
+                class="col-md-3 audiotooth"
+                src="tooth_fracture.wav"
+              ></audio>
+              <label style="padding-top: 60px; padding-left: 20px;"
+                >Tooth-Fracture Sound</label
+              >
+            </figure>
+            <div id="loader2"></div>
+            <!-- spectogram image -->
+            <div class="col-md-12" style="margin-top:50px">
+              <div id="imggtooth" class="col-md-3 idimgtooth"></div>
+              <div id="imggtoothdiff" class="col-md-3 idimgtoothdiff"></div>
+
+              <!-- amplitude image  -->
+              <div class="col-md-3 ">
+                <canvas id="imgg1tooth" width="261" height="200"></canvas>
+              </div>
+              <!-- <div id="imgg1tooth" class="col-md-3 idimg1tooth"></div> -->
+              <div id="imgg1toothdiff" class="col-md-3 idimg1toothdiff"></div>
+            </div>
+
+            <!-- chart -->
+          </div>
+        </div>
+
+        <!-- -------------------------------------------------------------------- wear -->
+
+        <div class="row">
+          <div style="height: 40vh">
+            <figure>
+              <audio
+                title="Wear Sound"
+                id="myaudiowear"
+                controls
+                class="col-md-3 audiowear"
+                src="wear.wav"
+              ></audio>
+              <label style="padding-top: 60px; padding-left: 20px;"
+                >Wear Sound</label
+              >
+            </figure>
+            <div id="loader3"></div>
+            <!-- spectogram image -->
+            <div class="col-md-12" style="margin-top:50px">
+              <div id="imggwear" class="col-md-3 idimgwear"></div>
+              <div id="imggweardiff" class="col-md-3 idimgweardiff"></div>
+
+              <!-- amplitude image  -->
+              <div class="col-md-3 ">
+                <canvas id="imgg1wear" width="261" height="200"></canvas>
+              </div>
+              <!-- <div id="imgg1wear" class="col-md-3 idimg1wear"></div> -->
+              <div id="imgg1weardiff" class="col-md-3 idimg1weardiff"></div>
+            </div>
+
+            <!-- chart -->
+          </div>
+        </div>
+      </div>
+
+      <div id="Paris" class="tabcontent">
+        <div class="row">
+          <div style="height: 55vh">
+            <figure>
+              <audio
+                title="MIX Sound"
+                id="myaudiomix"
+                controls
+                class="col-md-3 audiomix"
+                src="combined_changed_final.wav"
+              ></audio>
+              <label style="padding-top: 60px; padding-left: 20px;"
+                >Multiple Issues in Series</label
+              >
+            </figure>
+            <br />
+            <table id="myTable" style="width:60%;float:left;display:none">
+              <tr>
+                <td class="defect"></td>
+                <script>
+                  for (var j = 5; j <= 20; j += 5) {
+                    document.write(
+                      "<td class='sec'>" +
+                        (j - 5) +
+                        " - " +
+                        j +
+                        " sec" +
+                        "</td>"
+                    );
+                  }
+                </script>
+              </tr>
+              <tr id="normal">
+                <td class="defect">Normal</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr id="pitting">
+                <td class="defect">Pitting</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr id="tooth">
+                <td class="defect">Tooth Fracture</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr id="wear">
+                <td class="defect">Wear</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </table>
+
+            <div
+              class="col-md-3 "
+              style="margin-top:5%;margin-left:5%;float:left"
+            >
+              <canvas id="imgg1mix" width="261" height="200"></canvas>
+            </div>
+          </div>
+          <!-- chart -->
+        </div>
+        <!-- -----------------------------------------------------------------------------multilevel mix -->
+
+        <div class="row">
+          <div style="height: 55vh">
+            <figure>
+              <audio
+                title="Multi level MIX Sound"
+                id="myaudiomixmulti"
+                controls
+                class="col-md-3 audiomixmulti"
+                src="overlaid_final.wav"
+              ></audio>
+              <label style="padding-top: 60px; padding-left: 20px;"
+                >Multiple Issues in Parallel</label
+              >
+            </figure>
+            <br />
+            <table id="myTable1" style="width:60%;float:left;display:none">
+              <tr>
+                <td class="defect"></td>
+                <script>
+                  for (var j = 5; j <= 20; j += 5) {
+                    document.write(
+                      "<td class='sec'>" +
+                        (j - 5) +
+                        " - " +
+                        j +
+                        " sec" +
+                        "</td>"
+                    );
+                  }
+                </script>
+              </tr>
+              <tr id="normal1">
+                <td class="defect">
+                  Normal
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr id="pitting1">
+                <td class="defect">
+                  Pitting
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr id="tooth1">
+                <td class="defect">
+                  Tooth Fracture
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr id="wear1">
+                <td class="defect">
+                  Wear
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </table>
+
+            <div
+              class="col-md-3 "
+              style="margin-top:5%;margin-left:5%;float:left"
+            >
+              <canvas id="imgg1mixmulti" width="261" height="200"></canvas>
+            </div>
+
+            <!-- chart -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Audio Control -->
+
+    <script>
+      /* Tabs starts*/
+      function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+      /* tabs ends */
+
+      const url = "http://127.0.0.1:5005/testpost";
+      imgdata = {};
+      var click = 0;
+      var clearint1;
+      var soundfile = document.getElementById("myaudio");
+      soundfile.onplaying = function() {
+        document.getElementById("loader").style.display = "block";
+        imgdisp = "";
+        const param = {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: soundfile.src,
+          method: "POST"
+        };
+        console.log("body", param.body);
+        fetch(url, param)
+          .then(data => {
+            return data.json();
+          })
+          .then(res => {
+            console.log(res);
+            imgdata = res;
+            document.getElementById("loader").style.display = "none";
+            var newimg = document.createElement("img");
+            newimg.className = "specimg";
+            newimg.src = imgdata.data1;
+            var imgdisp = document.getElementById("imgg");
+            document.querySelectorAll(".specimg").forEach(function(a) {
+              a.remove();
+            });
+
+            imgdisp.appendChild(newimg);
+            var t = document.createElement("p");
+            t.className = "frequency";
+            t.innerText = "Frequency vs Time";
+            document.querySelectorAll(".frequency").forEach(function(a) {
+              a.remove();
+            });
+
+            // var figcap = document.createElement("FIGCAPTION");
+
+            imgdisp.appendChild(t);
+            // figcap.appendChild(t);
+
+            // for showing Amplitude Image
+            // console.log("imgdata >>", imgdata.data2);
+            // var newimg1 = document.createElement("img");
+            // newimg1.className = "ampimg";
+            // newimg1.src = imgdata.data2;
+            // var imgdisp1 = document.getElementById("imgg1");
+            // document.querySelectorAll(".ampimg").forEach(function(a) {
+            //   a.remove();
+            // });
+            // imgdisp1.appendChild(newimg1);
+
+            // var t = document.createElement("p");
+            // t.className = "amplitude";
+            // t.innerText = "Amplitude vs Time";
+            // document.querySelectorAll(".amplitude").forEach(function(a) {
+            //   a.remove();
+            // });
+            // imgdisp1.appendChild(t);
+
+            var ctx = document.getElementById("imgg1").getContext("2d");
+
+            // var array = [1, 2, 3, 2, 1, 3, -9, -7, -200, -230, 260];
+            var array = eval(imgdata.data8);
+            // var minVal = Math.min(...array);
+            // var maxVal = Math.max(...array);
+
+            console.log(array);
+            var count = array.length;
+            var counter = 0;
+            var DataResult = array.slice(0, 16000);
+            var LabelResult = [];
+
+            for (let i = 1; i <= 16000; i++) {
+              LabelResult.push(parseInt(i / 1600) + 1);
+            }
+
+            var chart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: LabelResult,
+
+                datasets: [
+                  {
+                    fill: false,
+                    data: DataResult,
+
+                    backgroundColor: "#FF2D00",
+                    borderColor: "#000000",
+                    type: "line",
+                    pointRadius: 0.5,
+                    lineTension: 0,
+                    borderWidth: 1
+                  }
+                ]
+              },
+              options: {
+                animation: false,
+                responsive: true,
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  enabled: false
+                },
+                scales: {
+                  xAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Time"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: 1,
+                        max: 10,
+                        stepSize: 1,
+                        maxTicksLimit: 10
+                      }
+                    }
+                  ],
+                  yAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Amplitude"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: -30000,
+                        max: 30000,
+                        stepSize: 5000
+                      }
+                    }
+                  ]
+                }
+              }
+            });
+
+            var loop = 1;
+
+            clearint1 = setInterval(function() {
+              if (loop < 20) {
+                chart.data.datasets[0].data = array.slice(
+                  loop * 16000,
+                  (loop + 1) * 16000
+                );
+                LabelResult = [];
+                for (let i = loop * 16000 + 1; i <= (loop + 1) * 16000; i++) {
+                  LabelResult.push(parseInt(i / 16000));
+                }
+                chart.data.labels = LabelResult;
+                chart.update();
+                loop++;
+              }
+            }, 900);
+
+            // for chart
+          });
+
+        // for showing spectogram image
+      };
+      soundfile.onpause = function() {
+        clearTimeout(clearint1);
+      };
+      // -----------------------------------------------------ptiing
+
+      var soundfilepitting = document.getElementById("myaudiopitting");
+      var clearint;
+      soundfilepitting.onplaying = function() {
+        document.getElementById("loader1").style.display = "block";
+        const param = {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: soundfilepitting.src,
+          method: "POST"
+        };
+        console.log("body", param.body);
+        fetch(url, param)
+          .then(data => {
+            return data.json();
+          })
+          .then(res => {
+            console.log(res);
+            imgdata = res;
+            document.getElementById("loader1").style.display = "none";
+            var newimg = document.createElement("img");
+            newimg.className = "specimgpitting";
+            newimg.src = imgdata.data3;
+            var imgdisp = document.getElementById("imggpitting");
+            document.querySelectorAll(".specimgpitting").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp.appendChild(newimg);
+
+            var t = document.createElement("p");
+            t.className = "amplitudep";
+            t.innerText = "Frequency vs Time";
+            document.querySelectorAll(".amplitudep").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp.appendChild(t);
+
+            // for diff in spectogram
+
+            var newimgdiff = document.createElement("img");
+            newimgdiff.className = "specimgpittingdiff";
+            newimgdiff.src = imgdata.data7;
+            var imgdispdiff = document.getElementById("imggpittingdiff");
+            document
+              .querySelectorAll(".specimgpittingdiff")
+              .forEach(function(a) {
+                a.remove();
+              });
+            imgdispdiff.appendChild(newimgdiff);
+
+            var t = document.createElement("p");
+            t.className = "amplitude1p";
+            t.innerText = "Difference In Frequency from Normal";
+            document.querySelectorAll(".amplitude1p").forEach(function(a) {
+              a.remove();
+            });
+            imgdispdiff.appendChild(t);
+
+            // for showing Amplitude Image
+            // console.log("imgdata >>", imgdata.data2);
+            // var newimg1 = document.createElement("img");
+            // newimg1.className = "ampimgpitting";
+            // newimg1.src = imgdata.data4;
+            // var imgdisp1 = document.getElementById("imgg1pitting");
+            // document.querySelectorAll(".ampimgpitting").forEach(function(a) {
+            //   a.remove();
+            // });
+            // imgdisp1.appendChild(newimg1);
+
+            // var t = document.createElement("p");
+            // t.className = "amplitude2p";
+            // t.innerText = "Amplitude vs Time";
+            // document.querySelectorAll(".amplitude2p").forEach(function(a) {
+            //   a.remove();
+            // });
+            // imgdisp1.appendChild(t);
+
+            var ctx = document.getElementById("imgg1pitting").getContext("2d");
+
+            //var array = [1, 2, 3, 2, 1, 3, -9, -7, -200, -230, 260];
+            var array = eval(imgdata.data8);
+            // var minVal = Math.min(...array);
+            // var maxVal = Math.max(...array);
+
+            console.log(array);
+            var count = array.length;
+            var counter = 0;
+            var DataResult = array.slice(0, 16000);
+            var LabelResult = [];
+
+            for (let i = 1; i <= 16000; i++) {
+              LabelResult.push(parseInt(i / 1600) + 1);
+            }
+
+            var chart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: LabelResult,
+
+                datasets: [
+                  {
+                    fill: false,
+                    data: DataResult,
+
+                    backgroundColor: "#FF2D00",
+                    borderColor: "#000000",
+                    type: "line",
+                    pointRadius: 0.5,
+                    lineTension: 0,
+                    borderWidth: 1
+                  }
+                ]
+              },
+              options: {
+                animation: false,
+                responsive: true,
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  enabled: false
+                },
+                scales: {
+                  xAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Time"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: 1,
+                        max: 10,
+                        stepSize: 1,
+                        maxTicksLimit: 10
+                      }
+                    }
+                  ],
+                  yAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Amplitude"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: -30000,
+                        max: 30000,
+                        stepSize: 5000
+                      }
+                    }
+                  ]
+                }
+              }
+            });
+
+            var loop = 1;
+
+            clearint = setInterval(function() {
+              if (loop < 20) {
+                chart.data.datasets[0].data = array.slice(
+                  loop * 16000,
+                  (loop + 1) * 16000
+                );
+                LabelResult = [];
+                for (let i = loop * 16000 + 1; i <= (loop + 1) * 16000; i++) {
+                  LabelResult.push(parseInt(i / 16000));
+                }
+                chart.data.labels = LabelResult;
+                chart.update();
+                loop++;
+              }
+            }, 900);
+
+            //for amp diff
+
+            var newimg1diff = document.createElement("img");
+            newimg1diff.className = "ampimgpittingdiff";
+            newimg1diff.src = imgdata.data6;
+            var imgdisp1diff = document.getElementById("imgg1pittingdiff");
+            document
+              .querySelectorAll(".ampimgpittingdiff")
+              .forEach(function(a) {
+                a.remove();
+              });
+            imgdisp1diff.appendChild(newimg1diff);
+
+            var t = document.createElement("p");
+            t.className = "amplitude3p";
+            t.innerText = "Difference in Amplitude from Normal";
+            document.querySelectorAll(".amplitude3p").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp1diff.appendChild(t);
+
+            // for chart
+          });
+
+        // for showing spectogram image
+      };
+      soundfilepitting.onpause = function() {
+        clearTimeout(clearint);
+      };
+      // --------------------------------------------------------- tooth fracture
+
+      var soundfiletooth = document.getElementById("myaudiotooth");
+      var clearint2;
+      soundfiletooth.onplaying = function() {
+        document.getElementById("loader2").style.display = "block";
+        const param = {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: soundfiletooth.src,
+          method: "POST"
+        };
+        console.log("body", param.body);
+        fetch(url, param)
+          .then(data => {
+            return data.json();
+          })
+          .then(res => {
+            console.log(res);
+            imgdata = res;
+            document.getElementById("loader2").style.display = "none";
+            var newimg = document.createElement("img");
+            newimg.className = "specimgtooth";
+            newimg.src = imgdata.data3;
+            var imgdisp = document.getElementById("imggtooth");
+            document.querySelectorAll(".specimgtooth").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp.appendChild(newimg);
+            var t = document.createElement("p");
+            t.className = "amplitudet";
+            t.innerText = "Frequency vs Time";
+            document.querySelectorAll(".amplitudet").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp.appendChild(t);
+
+            //for diff in spectogram
+            var newimgdiff = document.createElement("img");
+            newimgdiff.className = "specimgtoothdiff";
+            newimgdiff.src = imgdata.data2;
+            var imgdispdiff = document.getElementById("imggtoothdiff");
+            document.querySelectorAll(".specimgtoothdiff").forEach(function(a) {
+              a.remove();
+            });
+            imgdispdiff.appendChild(newimgdiff);
+            var t = document.createElement("p");
+            t.className = "amplitude1t";
+            t.innerText = "Difference In Frequency from Normal";
+            document.querySelectorAll(".amplitude1t").forEach(function(a) {
+              a.remove();
+            });
+            imgdispdiff.appendChild(t);
+            // for showing Amplitude Image
+            // console.log("imgdata >>", imgdata.data2);
+            // var newimg1 = document.createElement("img");
+            // newimg1.className = "ampimgtooth";
+            // newimg1.src = imgdata.data4;
+            // var imgdisp1 = document.getElementById("imgg1tooth");
+            // document.querySelectorAll(".ampimgtooth").forEach(function(a) {
+            //   a.remove();
+            // });
+            // imgdisp1.appendChild(newimg1);
+            // var t = document.createElement("p");
+            // t.className = "amplitude2t";
+            // t.innerText = "Amplitude vs Time";
+            // document.querySelectorAll(".amplitude2t").forEach(function(a) {
+            //   a.remove();
+            // });
+            // imgdisp1.appendChild(t);
+
+            var ctx = document.getElementById("imgg1tooth").getContext("2d");
+
+            //var array = [1, 2, 3, 2, 1, 3, -9, -7, -200, -230, 260];
+            var array = eval(imgdata.data8);
+            // var minVal = Math.min(...array);
+            // var maxVal = Math.max(...array);
+
+            console.log(array);
+            var count = array.length;
+            var counter = 0;
+            var DataResult = array.slice(0, 16000);
+            var LabelResult = [];
+
+            for (let i = 1; i <= 16000; i++) {
+              LabelResult.push(parseInt(i / 1600) + 1);
+            }
+
+            var chart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: LabelResult,
+
+                datasets: [
+                  {
+                    fill: false,
+                    data: DataResult,
+
+                    backgroundColor: "#FF2D00",
+                    borderColor: "#000000",
+                    type: "line",
+                    pointRadius: 0.5,
+                    lineTension: 0,
+                    borderWidth: 1
+                  }
+                ]
+              },
+              options: {
+                animation: false,
+                responsive: true,
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  enabled: false
+                },
+                scales: {
+                  xAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Time"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: 1,
+                        max: 10,
+                        stepSize: 1,
+                        maxTicksLimit: 10
+                      }
+                    }
+                  ],
+                  yAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Amplitude"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: -30000,
+                        max: 30000,
+                        stepSize: 5000
+                      }
+                    }
+                  ]
+                }
+              }
+            });
+
+            var loop = 1;
+
+            clearint2 = setInterval(function() {
+              if (loop < 20) {
+                chart.data.datasets[0].data = array.slice(
+                  loop * 16000,
+                  (loop + 1) * 16000
+                );
+                LabelResult = [];
+                for (let i = loop * 16000 + 1; i <= (loop + 1) * 16000; i++) {
+                  LabelResult.push(parseInt(i / 16000));
+                }
+                chart.data.labels = LabelResult;
+                chart.update();
+                loop++;
+              }
+            }, 900);
+
+            //for amp diff
+
+            var newimg1diff = document.createElement("img");
+            newimg1diff.className = "ampimgtoothdiff";
+            newimg1diff.src = imgdata.data1;
+            var imgdisp1diff = document.getElementById("imgg1toothdiff");
+            document.querySelectorAll(".ampimgtoothdiff").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp1diff.appendChild(newimg1diff);
+            var t = document.createElement("p");
+            t.className = "amplitude3t";
+            t.innerText = "Difference in Amplitude from Normal";
+            document.querySelectorAll(".amplitude3t").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp1diff.appendChild(t);
+
+            // for chart
+          });
+
+        // for showing spectogram image
+      };
+      soundfiletooth.onpause = function() {
+        clearTimeout(clearint2);
+      };
+      // --------------------------------------------------------------------------------wear
+      var soundfilewear = document.getElementById("myaudiowear");
+      var clearint3;
+      soundfilewear.onplaying = function() {
+        document.getElementById("loader3").style.display = "block";
+        const param = {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: soundfilewear.src,
+          method: "POST"
+        };
+        console.log("body", param.body);
+        fetch(url, param)
+          .then(data => {
+            return data.json();
+          })
+          .then(res => {
+            console.log(res);
+            imgdata = res;
+            document.getElementById("loader3").style.display = "none";
+            var newimg = document.createElement("img");
+            newimg.className = "specimgwear";
+            newimg.src = imgdata.data3;
+            var imgdisp = document.getElementById("imggwear");
+            document.querySelectorAll(".specimgwear").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp.appendChild(newimg);
+            var t = document.createElement("p");
+            t.className = "amplitudew";
+            t.innerText = "Frequency vs Time";
+            document.querySelectorAll(".amplitudew").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp.appendChild(t);
+
+            //for diff in spectogram
+            var newimgdiff = document.createElement("img");
+            newimgdiff.className = "specimgweardiff";
+            newimgdiff.src = imgdata.data2;
+            var imgdispdiff = document.getElementById("imggweardiff");
+            document.querySelectorAll(".specimgweardiff").forEach(function(a) {
+              a.remove();
+            });
+            imgdispdiff.appendChild(newimgdiff);
+            var t = document.createElement("p");
+            t.className = "amplitude1w";
+            t.innerText = "Difference In Frequency from Normal";
+            document.querySelectorAll(".amplitude1w").forEach(function(a) {
+              a.remove();
+            });
+            imgdispdiff.appendChild(t);
+            // for showing Amplitude Image
+            // console.log("imgdata >>", imgdata.data2);
+            // var newimg1 = document.createElement("img");
+            // newimg1.className = "ampimgwear";
+            // newimg1.src = imgdata.data4;
+            // var imgdisp1 = document.getElementById("imgg1wear");
+            // document.querySelectorAll(".ampimgwear").forEach(function(a) {
+            //   a.remove();
+            // });
+            // imgdisp1.appendChild(newimg1);
+            // var t = document.createElement("p");
+            // t.className = "amplitude2w";
+            // t.innerText = "Amplitude vs Time";
+            // document.querySelectorAll(".amplitude2w").forEach(function(a) {
+            //   a.remove();
+            // });
+            // imgdisp1.appendChild(t);
+
+            var ctx = document.getElementById("imgg1wear").getContext("2d");
+
+            //var array = [1, 2, 3, 2, 1, 3, -9, -7, -200, -230, 260];
+            var array = eval(imgdata.data8);
+            // var minVal = Math.min(...array);
+            // var maxVal = Math.max(...array);
+
+            console.log(array);
+            var count = array.length;
+            var counter = 0;
+            var DataResult = array.slice(0, 16000);
+            var LabelResult = [];
+
+            for (let i = 1; i <= 16000; i++) {
+              LabelResult.push(parseInt(i / 1600) + 1);
+            }
+
+            var chart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: LabelResult,
+
+                datasets: [
+                  {
+                    fill: false,
+                    data: DataResult,
+
+                    backgroundColor: "#FF2D00",
+                    borderColor: "#000000",
+                    type: "line",
+                    pointRadius: 0.5,
+                    lineTension: 0,
+                    borderWidth: 1
+                  }
+                ]
+              },
+              options: {
+                animation: false,
+                responsive: true,
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  enabled: false
+                },
+                scales: {
+                  xAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Time"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: 1,
+                        max: 10,
+                        stepSize: 1,
+                        maxTicksLimit: 10
+                      }
+                    }
+                  ],
+                  yAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Amplitude"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: -35000,
+                        max: 35000,
+                        stepSize: 5000
+                      }
+                    }
+                  ]
+                }
+              }
+            });
+
+            var loop = 1;
+
+            clearint3 = setInterval(function() {
+              if (loop < 20) {
+                chart.data.datasets[0].data = array.slice(
+                  loop * 16000,
+                  (loop + 1) * 16000
+                );
+                LabelResult = [];
+                for (let i = loop * 16000 + 1; i <= (loop + 1) * 16000; i++) {
+                  LabelResult.push(parseInt(i / 16000));
+                }
+                chart.data.labels = LabelResult;
+                chart.update();
+                loop++;
+              }
+            }, 900);
+
+            //for amp diff
+
+            var newimg1diff = document.createElement("img");
+            newimg1diff.className = "ampimgweardiff";
+            newimg1diff.src = imgdata.data1;
+            var imgdisp1diff = document.getElementById("imgg1weardiff");
+            document.querySelectorAll(".ampimgweardiff").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp1diff.appendChild(newimg1diff);
+            var t = document.createElement("p");
+            t.className = "amplitude3w";
+            t.innerText = "Difference in Amplitude from Normal";
+            document.querySelectorAll(".amplitude3w").forEach(function(a) {
+              a.remove();
+            });
+            imgdisp1diff.appendChild(t);
+
+            // for chart
+          });
+
+        // for showing spectogram image
+      };
+      soundfilewear.onpause = function() {
+        clearTimeout(clearint3);
+      };
+      // -----------------------------------------------------------------------------mix
+
+      var soundfilemix = document.getElementById("myaudiomix");
+      var clearint4;
+      var clearint9;
+      soundfilemix.onplaying = function() {
+        document.getElementById("myTable").style.display = "inline";
+        var resp = ["Normal", "Tooth Fracture", "Wear", "Pitting"];
+        var res = [];
+        var i = 0;
+
+        function change(i) {
+          res[i] = resp[i];
+
+          if (res[i] == "Normal") {
+            $("#normal")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg");
+          }
+          if (res[i] == "Pitting") {
+            $("#pitting")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg1");
+          }
+          if (res[i] == "Tooth Fracture") {
+            $("#tooth")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg1");
+          }
+          if (res[i] == "Wear") {
+            $("#wear")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg1");
+          }
+        }
+
+        clearint4 = setInterval(function() {
+          if (i <= 12) {
+            change(i);
+            i++;
+          }
+        }, 5000);
+
+        // for amp chart
+        const param = {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: soundfilemix.src,
+          method: "POST"
+        };
+        console.log("body", param.body);
+        fetch(url, param)
+          .then(data => {
+            return data.json();
+          })
+          .then(res => {
+            console.log(res);
+            imgdata = res;
+
+            var ctx = document.getElementById("imgg1mix").getContext("2d");
+
+            //var array = [1, 2, 3, 2, 1, 3, -9, -7, -200, -230, 260];
+            var array = eval(imgdata.data8);
+
+            console.log(array);
+            var count = array.length;
+            var counter = 0;
+            var DataResult = array.slice(0, 16000);
+            var LabelResult = [];
+
+            for (let i = 1; i <= 16000; i++) {
+              LabelResult.push(parseInt(i / 1600) + 1);
+            }
+
+            var chart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: LabelResult,
+
+                datasets: [
+                  {
+                    fill: false,
+                    data: DataResult,
+
+                    backgroundColor: "#FF2D00",
+                    borderColor: "#000000",
+                    type: "line",
+                    pointRadius: 0.5,
+                    lineTension: 0,
+                    borderWidth: 1
+                  }
+                ]
+              },
+              options: {
+                animation: false,
+                responsive: true,
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  enabled: false
+                },
+                scales: {
+                  xAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Time"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: 1,
+                        max: 10,
+                        stepSize: 1,
+                        maxTicksLimit: 10
+                      }
+                    }
+                  ],
+                  yAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Amplitude"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: -35000,
+                        max: 35000,
+                        stepSize: 5000
+                      }
+                    }
+                  ]
+                }
+              }
+            });
+
+            var loop = 1;
+
+            clearint9 = setInterval(function() {
+              if (loop < 20) {
+                chart.data.datasets[0].data = array.slice(
+                  loop * 16000,
+                  (loop + 1) * 16000
+                );
+                LabelResult = [];
+                for (let i = loop * 16000 + 1; i <= (loop + 1) * 16000; i++) {
+                  LabelResult.push(parseInt(i / 16000));
+                }
+                chart.data.labels = LabelResult;
+                chart.update();
+                loop++;
+              }
+            }, 800);
+          });
+        //ends
+      };
+      soundfilemix.onpause = function() {
+        clearTimeout(clearint4);
+        clearTimeout(clearint9);
+      };
+
+      // ----------------------------------------------------------------multi mix
+
+      var soundfilemixmulti = document.getElementById("myaudiomixmulti");
+      var clearint5;
+      var clearint8;
+      soundfilemixmulti.onplaying = function() {
+        document.getElementById("myTable1").style.display = "inline";
+        var resp = ["Normal", "Tooth Fracture", "Wear", "Pitting"];
+        var res = [];
+        var i = 0;
+
+        function change(i) {
+          res[i] = resp[i];
+
+          if (res[i] == "Normal") {
+            $("#normal1")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg");
+          }
+          if (res[i] == "Pitting") {
+            $("#pitting1")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg1");
+            $("#wear1")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg1");
+          }
+          if (res[i] == "Tooth Fracture") {
+            $("#tooth1")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg1");
+            $("#wear1")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg1");
+          }
+          if (res[i] == "Wear") {
+            $("#tooth1")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg1");
+            $("#pitting1")
+              .find("td")
+              .eq(i + 1)
+              .addClass("greybg1");
+          }
+        }
+        clearint5 = setInterval(function() {
+          if (i <= 12) {
+            change(i);
+            i++;
+          }
+        }, 5000);
+
+        //for amp chart
+        const param = {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: soundfilemixmulti.src,
+          method: "POST"
+        };
+        console.log("body", param.body);
+        fetch(url, param)
+          .then(data => {
+            return data.json();
+          })
+          .then(res => {
+            console.log(res);
+            imgdata = res;
+
+            var ctx = document.getElementById("imgg1mixmulti").getContext("2d");
+
+            //var array = [1, 2, 3, 2, 1, 3, -9, -7, -200, -230, 260];
+            var array = eval(imgdata.data8);
+
+            console.log(array);
+            var count = array.length;
+            var counter = 0;
+            var DataResult = array.slice(0, 16000);
+            var LabelResult = [];
+
+            for (let i = 1; i <= 16000; i++) {
+              LabelResult.push(parseInt(i / 1600) + 1);
+            }
+
+            var chart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: LabelResult,
+
+                datasets: [
+                  {
+                    fill: false,
+                    data: DataResult,
+
+                    backgroundColor: "#FF2D00",
+                    borderColor: "#000000",
+                    type: "line",
+                    pointRadius: 0.5,
+                    lineTension: 0,
+                    borderWidth: 1
+                  }
+                ]
+              },
+              options: {
+                animation: false,
+                responsive: true,
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  enabled: false
+                },
+                scales: {
+                  xAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Time"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: 1,
+                        max: 10,
+                        stepSize: 1,
+                        maxTicksLimit: 10
+                      }
+                    }
+                  ],
+                  yAxes: [
+                    {
+                      scaleLabel: {
+                        display: true,
+                        labelString: "Amplitude"
+                      },
+                      ticks: {
+                        beginAtZero: true,
+                        min: -35000,
+                        max: 35000,
+                        stepSize: 5000
+                      }
+                    }
+                  ]
+                }
+              }
+            });
+
+            var loop = 1;
+
+            clearint8 = setInterval(function() {
+              if (loop < 20) {
+                chart.data.datasets[0].data = array.slice(
+                  loop * 16000,
+                  (loop + 1) * 16000
+                );
+                LabelResult = [];
+                for (let i = loop * 16000 + 1; i <= (loop + 1) * 16000; i++) {
+                  LabelResult.push(parseInt(i / 16000));
+                }
+                chart.data.labels = LabelResult;
+                chart.update();
+                loop++;
+              }
+            }, 850);
+          });
+        //ends
+      };
+      soundfilemixmulti.onpause = function() {
+        clearTimeout(clearint5);
+        clearTimeout(clearint8);
+      };
+    </script>
+  </body>
+</html>
